@@ -2,78 +2,135 @@
 
 Este repositório contém a implementação do projeto [TabNews](https://www.tabnews.com.br) para o curso [curso.dev](https://curso.dev). Abaixo, uma lista de referência dos comandos utilizados durante o desenvolvimento.
 
+# Tecnologias utilizadas
+
+- 🐧 **Navegação e Sistema:** Linux/Bash
+- 🟢 **Ambiente de Execução:** Node.js
+- 🟢 **Gerenciamento de Versão:** NVM
+- 📦 **Gerenciador de Pacotes:** NPM
+- 🌳 **Controle de Versão Offline / Local:** Git
+- ☁️ **Controle de Versão Online / Remoto:** Git
+- ▲ **Framework Web:** Next.js
+- ⚛️ **Biblioteca de Interface de Usuário:** React
+- 💅 **Estilização e Formatação de Código:** Prettier, EditorConfig
+- ☁️ **Hospedagem e Continuous Deployment (CD):** Vercel
+- 🐳 **Conteinerização:** Docker
+- 🧪 **Testes Automatizados:** Jest
+- 🐘 **Banco de Dados:** PostgreSQL
+
 # ⭐ Lista de comandos
 
-### 🐧 Navegação e Sistema (Linux/Bash)
+### 🐧 Linux/Bash (Navegação e Sistema)
 
 Estes são os comandos básicos para você se localizar e organizar o terminal do Codespaces.
 
-- **`clear`** ou **`Ctrl + L`**: Limpa a tela do terminal. (Dica: O atalho `Ctrl + L` é o preferido do instrutor, pois limpa o visual sem adicionar o registro "clear" no histórico de comandos.)
+- **`clear`** ou **`Ctrl + L`**: Limpa a tela do terminal. (Dica*:* O atalho `Ctrl + L` é o preferido do instrutor, pois limpa o visual sem adicionar o registro "clear" no histórico de comandos.)
 - **`ls`**: Lista os arquivos e pastas visíveis no diretório atual.
 - **`ls -l`**: Lista os arquivos em formato vertical, exibindo mais detalhes (permissões, tamanho, etc).
 - **`ls -la`**: Lista **todos** os arquivos, incluindo os ocultos (aqueles que começam com `.`, como a pasta `.git`).
 - **`sudo apt update && sudo apt install dnsutils -y`**: Atualiza os repositórios e instala o pacote que contém as ferramentas `dig` e `nslookup`. (Essencial em ambientes novos).
 
-### 🟢 Node.js e NVM (Gerenciamento de Versão)
+### 🟢 Node.js (Ambiente de Execução) e NVM (Gerenciamento de Versão)
 
 Comandos essenciais para configurar a fundação do projeto e garantir que todos estejam na mesma versão da tecnologia.
 
-- **`node -v`**: Verifica qual versão do **Node.js** está ativa no momento.
-- **`nvm ls`**: Lista as versões do Node.js instaladas e disponíveis no **NVM** (Node Version Manager).
+- **`node -v`**: Verifica qual versão do **Node.js** (Node.js = ambiente de execução JavaScript que permite rodar JavaScript no servidor, fora do navegador) está ativa no momento.
+- **`nvm ls`**: Lista as versões do Node.js instaladas e disponíveis no **NVM** (Node Version Manager = script que gerencia diferentes versões do Node.js).
 - **`nvm install lts/hydrogen`**: Instala a versão LTS (Long Term Support) específica chamada "Hydrogen".
-- **`nvm alias default lts/hydrogen`**: Define a versão "Hydrogen" como o padrão do sistema.
-- **`nvm install`**: Quando rodado sem argumentos na raiz do projeto, ele lê o arquivo `.nvmrc` e instala/seleciona a versão definida nele.
+- **`nvm alias default lts/hydrogen`**: Define a versão "Hydrogen" como o padrão do sistema, para que ela seja carregada automaticamente sempre que você abrir um novo terminal.
+- **`nvm install`**: Quando rodado sem argumentos na raiz do projeto, ele lê o arquivo `.nvmrc` (que especifica a versão do Node.js que o projeto requer) e instala/seleciona a versão definida nele.
 
 ### 📦 NPM (Gerenciador de Pacotes)
 
 Comandos para gerenciar as dependências (bibliotecas) do projeto e executar scripts.
 
-- **`npm init`**: Inicializa o projeto, criando o arquivo `package.json` (o manifesto).
+- **`npm init`**: Comando do **npm** (Node Package Manager = gerenciador padrão do Node.js usado para instalar, compartilhar e controlar as dependências - i.e., bibliotecas e ferramentas - de um projeto JavaScript) que inicializa o projeto, criando o arquivo `package.json` (o manifesto).
 - **`npm install [pacote]@[versão]`**: Baixa e instala uma dependência no projeto. Utilizar o `@[versão]` instala uma versão exata de um pacote, ignorando atualizações automáticas.
-- **`npm run dev`**: Executa o script chamado "dev" que configuramos no `package.json` (sobe o servidor local).
-- **`npm install [pacote] --save-dev`** (ou **`-D`**): Instala uma dependência exclusivamente para o ambiente de desenvolvimento (ela vai para o bloco `devDependencies`). Usada para ferramentas como o Prettier e Jest.
-- **`npm run lint:check`**: Comando personalizado para rodar o Prettier no modo de conferência, analisando a formatação sem alterar os arquivos.
-- **`npm run lint:fix`**: Comando personalizado para rodar o Prettier no modo de conserto, corrigindo automaticamente a formatação dos arquivos.
+  - Exemplos usados: `npm install next@13.1.6` (**Next.js** = framewok para desenvolvimento web que permite criar sites rápidos com renderização no servidor), `npm install react@18.2.0` (**React** = biblioteca principal para construir interfaces de usuário baseadas em componentes), `npm install react-dom@18.2.0` (**React DOM**) = permite ao React interagir com o navegador e renderizar os elementos no HTML).
+- **`npm run dev`**: Executa o script chamado "dev" que configuramos no `package.json` (que, por sua vez, roda o `next dev` para subir o servidor local).
+- **`npm install [pacote] --save-dev`** (ou **`npm install [pacote] -D`**): Instala uma dependência exclusivamente para o ambiente de desenvolvimento (ela vai para o bloco `devDependencies` do `package.json`). Utilizada para ferramentas que não vão para produção, como o Prettier (ex: `npm install prettier --save-dev`).
+- **`npm run lint:check`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conferência (`prettier --check .`), analisando todos os arquivos e avisando se há erros de formatação sem alterar nada.
+- **`npm run lint:fix`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conserto (`prettier --write .`), corrigindo e reescrevendo automaticamente a formatação dos arquivos que estão fora do padrão.
 
 ### 🌳 Git (Controle de Versão Offline / Local)
 
-Estes são os comandos para gerenciar a "máquina do tempo" do seu código.
+Estes são os comandos para gerenciar a "máquina do tempo" do seu código por meio do **Git** (Git = sistema de controle de versão, que registra e recupera o histórico de alterações). Lembre-se que, até o Dia 5, todos funcionam localmente (_offline_).
 
-- **`git status`**: Mostra em qual estado estão seus arquivos (_Untracked_, _Modified_ ou _Staged_).
-- **`git add [arquivo]`**: Move um arquivo para o palco (_Staged_), preparando-o para o _Commit_.
-- **`git commit -m "mensagem"`**: Grava a versão definitiva no histórico com uma mensagem descritiva.
-- **`git commit --amend`**: Permite alterar o último commit, fundindo novas alterações ou mudando a mensagem.
-- **`git diff`**: Mostra linha a linha o que mudou no código desde a última versão salva.
-- **`git log`**: Exibe o histórico de commits completo. (Variações: `--stat` para ver arquivos alterados ou `--oneline` para formato compacto).
-- **`git add -A`**: Adiciona **todas** as alterações do seu repositório de uma só vez para o palco.
-- **`q` (tecla)**: Usada para sair do modo de visualização no terminal (comum no `git log`).
+- **`git status`**: É a sua bússola. Mostra em qual estado estão seus arquivos (_Untracked_, _Modified_ ou _Staged_).
+- **`git add [arquivo]`**: Move um arquivo do estado _Modified_ (ou _Untracked_) para o _Staged_ (o palco), preparando-o para a próxima “foto” (_Commit_).
+- **`git commit -m "mensagem"`**: Tira a foto definitiva (_Commit_) dos arquivos que estão no palco, gravando a versão no histórico com uma mensagem descritiva.
+- **`git commit --amend`**: A "viagem no tempo". Permite alterar o último commit, fundindo as alterações que estão no palco com a versão anterior (alterando o hash do commit).
+- **`git diff`**: Mostra linha a linha o que mudou no código (a diferença entre o estado atual e a última versão salva).
+- **`git log`**: Exibe o álbum de fotos completo (histórico de commits) com autor, data e mensagem.
+- **`git log --stat`**: Mostra o histórico adicionando estatísticas resumidas de quais arquivos foram alterados.
+- **`git log --oneline`**: Mostra uma versão compacta do histórico, com o hash resumido e a mensagem em uma única linha.
+- **`git commit --amend --no-edit`**: Variação do comando `amend` que altera o último commit mantendo a mensagem original, sem abrir o editor de texto. Útil para correções rápidas onde a descrição do commit não muda.
+- **`git add -A`**: Adiciona **todas** as alterações do seu repositório de uma só vez para o _stage_ (o palco), incluindo arquivos modificados, novos (_untracked_) e deletados.
+- **`q` (tecla)**: Comando utilizado para sair (quit) do modo de visualização paginada no terminal, muito comum ao executar comandos longos como `git log` ou `git diff`.
 
 ### ☁️ Git (Controle de Versão Online / Remoto)
 
-- **`git push`**: Empurra (_upload_) os commits da sua branch local para o GitHub.
-- **`git push --force`** (ou **`-f`**): Força o envio sobrescrevendo o histórico remoto. (Cuidado: usar apenas em branches individuais após um `amend`).
-- **`git pull`**: Puxa (_download_) as alterações do GitHub para a sua máquina.
+Estes comandos permitem a interação entre o seu repositório local e o repositório de origem (_Origin_) no GitHub, "furando a bolha" do seu computador.
 
-### 🐳 Docker
+- **`git push`**: Empurra (_upload_) os commits da sua branch local para o repositório remoto. É o comando que publica seu trabalho na internet.
+- **`git push --force`** (ou **`git push -f`**): Força o envio dos commits locais, sobrescrevendo o histórico do repositório remoto. (Atenção*:* É um comando perigoso, usado quando as histórias divergem, como após um `amend`. Em times, pode apagar o trabalho de colegas se usado sem cuidado).
+- **`git pull`**: Puxa (_download_) as alterações que estão no repositório remoto para a sua máquina (o inverso do `push`).
 
-- **`docker -v`**: Verifica se o Docker está instalado e pronto para uso no ambiente.
+### 🐳 Docker (Conteinerização)
 
-### 🌐 Redes, DNS e Protocolo HTTP
+Estes comandos introduzem a plataforma de contêineres, uma tecnologia essencial que nos permitirá rodar serviços auxiliares (p.ex., nosso banco de dados) em ambientes completamente isolados e padronizados, gerenciando seus ciclos de vida e a orquestração de serviços.
 
-Comandos para investigar como a internet resolve nomes e visualizar a comunicação cliente-servidor sem "maquiagem".
+- **`docker -v`**: Apenas verificamos se o Docker estava instalado e pronto para uso no ambiente.
+- **`docker ps -a`**: Lista todos os contêineres (o `a` ou `-all` inclui os que estão parados). Útil para verificar **Exit Codes** de processos que encerraram.
+- **`docker logs [ID ou Nome]`**: Exibe o histórico de logs de um contêiner específico. Essencial para debugar falhas de inicialização.
+- **`docker compose up -d`** (ou **`docker compose up --detached`**): Sobe os serviços definidos no arquivo `compose.yaml` em modo **detached** (segundo plano), liberando o terminal.
+- **`docker compose up -d --force-recreate`**: Força a recriação dos contêineres mesmo que não haja alterações aparentes no arquivo de configuração. Útil para aplicar novas portas ou variáveis.
+- **`docker compose -f [caminho/do/arquivo] up`**: A flag `-f` (ou `--file`) permite especificar o caminho de um arquivo de configuração que não esteja na raiz (ex: `infra/compose.yaml`).
+- **`docker compose down`**: Para e remove todos os contêineres, redes e imagens definidos no arquivo de configuração.
+- **`docker compose up`**: Sobe os serviços definidos no arquivo `compose.yaml` , porém mantém o terminal travado (para destravar, use o comando `CTRL + C`).
 
-- **`nslookup -type=ns [dominio]`**: Consulta quais são os servidores de autoridade de um domínio.
-- **`dig [dominio] [tipo] +trace`**: Mostra todo o caminho da resolução DNS até o destino final.
-- **`watch -n [segundos] [comando]`**: Executa repetidamente um comando para monitoramento em tempo real (Ex: propagação de IP).
-- **`curl [URL]`**: Realiza uma requisição GET simples e exibe o corpo (_body_) da resposta.
-- **`curl -v [URL]`** (ou **`--verbose`**): Exibe todo o processo do protocolo, incluindo cabeçalhos de requisição (`>`) e resposta (`<`).
-- **`curl --insecure [URL]`**: Ignora erros de certificados SSL (útil para testes em IPs diretos via HTTPS).
-- **`curl --header "[Chave]: [Valor]" [URL]`**: Injeta manualmente um cabeçalho na requisição (Ex: testar _Virtual Hosts_ com o cabeçalho `Host`).
+### 🌐 Redes e DNS (Domain Name System)
 
-### 🧪 Testes Automatizados (Jest)
+Estes comandos são utilizados para investigar e rastrear como a internet resolve os nomes de domínios e encontra os endereços IP dos servidores. Permitem "encostar a mão" no protocolo HTTP e visualizar a comunicação cliente-servidor sem intermediários.
 
-- **`npm install jest@29.6.2 --save-dev`**: Instala o framework de testes Jest como dependência de desenvolvimento.
-- **`npm test`**: Executa a bateria de testes uma única vez.
-- **`npm run test:watch`**: Executa o Jest em modo de observação, vigiando alterações nos arquivos para rodar os testes automaticamente.
-- **`await fetch("[URL]")`**: Realiza uma requisição HTTP assíncrona. Deve ser precedida por `await` para aguardar a resposta da _Promise_.
-- **`async () => { ... }`**: Define uma _arrow function_ como assíncrona, permitindo o uso de `await` dentro dela.
+- **`sudo apt install dnsutils`**: Instala o pacote de utilitários de DNS (que contém a ferramenta `dig`) no sistema operacional Linux (Ubuntu/Debian) do seu Codespaces. _(Nota: A flag **`-y`**, adicionada ao final do comando, vem de **"yes"** e responde automaticamente "sim" para todas as perguntas que o terminal faria.)_
+- **`nslookup -type=ns [dominio]`**: Pergunta ao DNS local quem são os servidores de autoridade. Se retornar _"Non-authoritative answer"_, o dado veio de cache.
+- **`host -t ns [dominio]`**: Comando simplificado para listar os servidores de autoridade.
+- **`dig -v`**: Verifica a versão instalada da ferramenta BIND Utilities (DiG).
+- **`dig [dominio] [tipo]`**: Realiza uma consulta manual no sistema de DNS para um domínio específico, buscando o registro desejado.
+  - _Exemplo:_ `dig fintab.com.br A` (pergunta ao DNS qual é o endereço IP, ou _A Record_, associado àquele domínio).
+- **`dig [dominio] NS`**: Busca os servidores de nome (NameServers).
+- **`dig [dominio] A`**: Busca o endereço IP (**A**ddress) do servidor.
+- **`dig [dominio] [tipo] +trace`**: Realiza a mesma consulta DNS, mas a _flag_ `+trace` força a ferramenta a exibir todo o caminho percorrido (o rastro), passando pelos _Root Servers_, _TLD Servers_ e _Authoritative Servers_, até encontrar a resposta final.
+  - **`+short`**: Flag que limpa a resposta do `dig`, exibindo apenas o dado essencial. (Ex: `dig fintab.com.br A +short`).
+  - **`+trace`**: Mostra todo o caminho hierárquico, da raiz (.) ao destino final. Útil para ver se o registro TLD (ex: `.br`) já atualizou. (Ex: `dig fintab.com.br NS +trace`).
+- **`dig @1.1.1.1 [dominio] NS`**: Força a consulta usando um DNS específico (neste caso, o da Cloudflare) para furar o cache local.
+- **`dig [dominio] +dnssec`**: Verifica as assinaturas de segurança do domínio. Usado para garantir que a transição de DNS não tenha erros de validação.
+- **`dig [dominio] ANY`**: Tenta buscar todos os registros disponíveis (A, MX, NS, TXT) de uma só vez. (_Nota: Alguns servidores DNS modernos bloqueiam o ANY por segurança, mas é um comando clássico._)
+- **`watch -n [segundos] [comando]`**: Executa repetidamente um comando em intervalos definidos para monitoramento em tempo real. (Ex: `watch -n 10 dig fintab.com.br A +short`).
+  - _Utilidade:_ Permite "sentar e esperar" a propagação do DNS sem precisar digitar o comando manualmente várias vezes. (Dica: Use `Ctrl + C` para sair do monitoramento).
+- **`curl [URL]`**: Realiza uma requisição GET simples e exibe o corpo (_body_) da resposta no terminal.
+- **`curl -v [URL]`** (ou **`-verbose`**): Ativa o modo detalhado. Exibe todo o processo do protocolo, incluindo os cabeçalhos de requisição (`>`) e os cabeçalhos de resposta (`<`).
+- **`curl --insecure [URL]`**: Permite realizar requisições HTTPS ignorando erros de certificados de segurança (SSL/TLS). Útil para testar acessos diretos via endereço IP.
+- **`curl --header "[Chave]: [Valor]" [URL]`**: Injeta manualmente um cabeçalho na requisição.
+  - _Exemplo usado em aula:_ `curl -v --header "Host: fintab.com.br" https://76.76.21.21` (usado para provar como o servidor identifica o site correto em um ambiente de _Virtual Host_).
+
+### 🧪 Jest (Testes Automatizados)
+
+Funções e sintaxes fundamentais para instalar e rodar a sua malha de proteção, permitindo criar testes que validam o comportamento real do sistema e suas conexões externas.
+
+- **`npm install jest@29.6.2 --save-dev`**: Instala o framework de testes Jest em uma versão específica, salvando-o como dependência de desenvolvimento (pois não queremos que ele vá para o servidor de produção).
+- **`npm test`** (ou **`npm run test`**): Executa a bateria de testes automatizados uma única vez. _(Nota: Requer a configuração `"test": "jest"` na seção de scripts do `package.json`)_.
+- **`npm run test:watch`**: Executa o Jest em modo de observação (_watch mode_). O terminal fica "vigiando" os arquivos do projeto; toda vez que você salva um arquivo, ele roda a bateria de testes automaticamente. _(Nota: Requer a configuração `"test:watch": "jest --watch"` no `package.json`)_.
+- **`Ctrl + C`** ou **`q`**: Atalhos utilizados no terminal para interromper o modo _watch_ do Jest e voltar à linha de comando normal.
+- **`await fetch("[URL]")`**: Realiza uma requisição HTTP assíncrona por dentro do código. Por retornar uma _Promise_, deve ser precedida por `await` para que o teste aguarde a resposta antes de prosseguir com as verificações.
+- **`async () => { ... }`**: Define uma _arrow function_ como assíncrona. É obrigatório declarar a função de teste como `async` para que seja possível utilizar a palavra-chave `await` dentro dela.
+
+### 🐘 PostgreSQL (Banco de Dados)
+
+Comandos para instalar o cliente, realizar conexões manuais e interagir com o servidor de banco de dados.
+
+- **`sudo apt install postgresql-client`**: Instala o pacote que contém o `psql`, o cliente oficial de linha de comando para interagir com o PostgreSQL.
+- **`psql --host [endereço] --username [usuario] --port [porta]`**: Comando para se conectar a uma instância de banco de dados Postgres (Ex: `psql --host localhost --username postgres --port 5432`).
+- **`\q`**: Comando executado dentro do terminal do `psql` para encerrar a conexão e sair (quit).
+- **`SELECT 1+1;`**: Exemplo de query SQL básica para testar se a conexão está ativa e processando comandos.
