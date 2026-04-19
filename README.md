@@ -17,10 +17,11 @@ Este repositório contém a implementação do projeto [TabNews](https://www.tab
 - 🐳 **Conteinerização:** Docker
 - 🧪 **Testes Automatizados:** Jest
 - 🐘 **Banco de Dados:** PostgreSQL
+- 🔑 **Variáveis de Ambiente:** .env
 
 # ⭐ Lista de comandos
 
-### 🐧 Linux/Bash (Navegação e Sistema)
+### 🐧 Navegação e Sistema (Linux/Bash)
 
 Estes são os comandos básicos para você se localizar e organizar o terminal do Codespaces.
 
@@ -29,8 +30,11 @@ Estes são os comandos básicos para você se localizar e organizar o terminal d
 - **`ls -l`**: Lista os arquivos em formato vertical, exibindo mais detalhes (permissões, tamanho, etc).
 - **`ls -la`**: Lista **todos** os arquivos, incluindo os ocultos (aqueles que começam com `.`, como a pasta `.git`).
 - **`sudo apt update && sudo apt install dnsutils -y`**: Atualiza os repositórios e instala o pacote que contém as ferramentas `dig` e `nslookup`. (Essencial em ambientes novos).
+- **`env`**: Lista todas as variáveis de ambiente ativas no seu processo atual do Shell.
+- **`history`**: Exibe o histórico de comandos digitados no terminal. (Dica: Adicionar um **espaço em branco** antes de qualquer comando impede que ele seja registrado no histórico, protegendo dados sensíveis).
+- **`exit`** ou **`Ctrl + D`**: Encerra a sessão atual do terminal ou processo ativo.
 
-### 🟢 Node.js (Ambiente de Execução) e NVM (Gerenciamento de Versão)
+### 🟢 Node.js e NVM (Gerenciamento de Versão)
 
 Comandos essenciais para configurar a fundação do projeto e garantir que todos estejam na mesma versão da tecnologia.
 
@@ -46,7 +50,7 @@ Comandos para gerenciar as dependências (bibliotecas) do projeto e executar scr
 
 - **`npm init`**: Comando do **npm** (Node Package Manager = gerenciador padrão do Node.js usado para instalar, compartilhar e controlar as dependências - i.e., bibliotecas e ferramentas - de um projeto JavaScript) que inicializa o projeto, criando o arquivo `package.json` (o manifesto).
 - **`npm install [pacote]@[versão]`**: Baixa e instala uma dependência no projeto. Utilizar o `@[versão]` instala uma versão exata de um pacote, ignorando atualizações automáticas.
-  - Exemplos usados: `npm install next@13.1.6` (**Next.js** = framewok para desenvolvimento web que permite criar sites rápidos com renderização no servidor), `npm install react@18.2.0` (**React** = biblioteca principal para construir interfaces de usuário baseadas em componentes), `npm install react-dom@18.2.0` (**React DOM**) = permite ao React interagir com o navegador e renderizar os elementos no HTML).
+  - Exemplos usados: `npm install next@13.1.6` (**Next.js** = framewok para desenvolvimento web que permite criar sites rápidos com renderização no servidor), `npm install react@18.2.0` (**React** = biblioteca principal para construir interfaces de usuário baseadas em componentes), `npm install react-dom@18.2.0` (**React DOM** = permite ao React interagir com o navegador e renderizar os elementos no HTML).
 - **`npm run dev`**: Executa o script chamado "dev" que configuramos no `package.json` (que, por sua vez, roda o `next dev` para subir o servidor local).
 - **`npm install [pacote] --save-dev`** (ou **`npm install [pacote] -D`**): Instala uma dependência exclusivamente para o ambiente de desenvolvimento (ela vai para o bloco `devDependencies` do `package.json`). Utilizada para ferramentas que não vão para produção, como o Prettier (ex: `npm install prettier --save-dev`).
 - **`npm run lint:check`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conferência (`prettier --check .`), analisando todos os arquivos e avisando se há erros de formatação sem alterar nada.
@@ -81,13 +85,14 @@ Estes comandos permitem a interação entre o seu repositório local e o reposit
 Estes comandos introduzem a plataforma de contêineres, uma tecnologia essencial que nos permitirá rodar serviços auxiliares (p.ex., nosso banco de dados) em ambientes completamente isolados e padronizados, gerenciando seus ciclos de vida e a orquestração de serviços.
 
 - **`docker -v`**: Apenas verificamos se o Docker estava instalado e pronto para uso no ambiente.
-- **`docker ps -a`**: Lista todos os contêineres (o `a` ou `-all` inclui os que estão parados). Útil para verificar **Exit Codes** de processos que encerraram.
+- **`docker ps -a`**: Lista todos os contêineres (o `-a` ou `--all` inclui os que estão parados). Útil para verificar **Exit Codes** de processos que encerraram.
 - **`docker logs [ID ou Nome]`**: Exibe o histórico de logs de um contêiner específico. Essencial para debugar falhas de inicialização.
 - **`docker compose up -d`** (ou **`docker compose up --detached`**): Sobe os serviços definidos no arquivo `compose.yaml` em modo **detached** (segundo plano), liberando o terminal.
 - **`docker compose up -d --force-recreate`**: Força a recriação dos contêineres mesmo que não haja alterações aparentes no arquivo de configuração. Útil para aplicar novas portas ou variáveis.
 - **`docker compose -f [caminho/do/arquivo] up`**: A flag `-f` (ou `--file`) permite especificar o caminho de um arquivo de configuração que não esteja na raiz (ex: `infra/compose.yaml`).
 - **`docker compose down`**: Para e remove todos os contêineres, redes e imagens definidos no arquivo de configuração.
-- **`docker compose up`**: Sobe os serviços definidos no arquivo `compose.yaml` , porém mantém o terminal travado (para destravar, use o comando `CTRL + C`).
+- **`docker compose up`**: Sobe os serviços definidos no arquivo `compose.yaml` , porém mantém o terminal travado (para destravar, use o comando `Ctrl + C`).
+- **`env_file: .env`**: Chave utilizada dentro do arquivo `compose.yaml` para instruir o Docker a carregar variáveis de ambiente diretamente de um arquivo externo, evitando duplicidade de configurações.
 
 ### 🌐 Redes e DNS (Domain Name System)
 
@@ -122,15 +127,26 @@ Funções e sintaxes fundamentais para instalar e rodar a sua malha de proteçã
 - **`npm install jest@29.6.2 --save-dev`**: Instala o framework de testes Jest em uma versão específica, salvando-o como dependência de desenvolvimento (pois não queremos que ele vá para o servidor de produção).
 - **`npm test`** (ou **`npm run test`**): Executa a bateria de testes automatizados uma única vez. _(Nota: Requer a configuração `"test": "jest"` na seção de scripts do `package.json`)_.
 - **`npm run test:watch`**: Executa o Jest em modo de observação (_watch mode_). O terminal fica "vigiando" os arquivos do projeto; toda vez que você salva um arquivo, ele roda a bateria de testes automaticamente. _(Nota: Requer a configuração `"test:watch": "jest --watch"` no `package.json`)_.
+  - Alterando-a para **`jest --watchAll`**, garantimos que todos os testes sejam reexecutados a cada salvamento, independentemente do status no Git.
 - **`Ctrl + C`** ou **`q`**: Atalhos utilizados no terminal para interromper o modo _watch_ do Jest e voltar à linha de comando normal.
 - **`await fetch("[URL]")`**: Realiza uma requisição HTTP assíncrona por dentro do código. Por retornar uma _Promise_, deve ser precedida por `await` para que o teste aguarde a resposta antes de prosseguir com as verificações.
 - **`async () => { ... }`**: Define uma _arrow function_ como assíncrona. É obrigatório declarar a função de teste como `async` para que seja possível utilizar a palavra-chave `await` dentro dela.
 
-### 🐘 PostgreSQL (Banco de Dados)
+### **🐘 PostgreSQL (Banco de Dados)**
 
-Comandos para instalar o cliente, realizar conexões manuais e interagir com o servidor de banco de dados.
+Comandos para instalar o cliente, realizar conexões manuais e interagir com o servidor de banco de dados, utilizando o cliente oficial `psql` e o driver `pg` **(Node-Postgres)** para a aplicação.
 
 - **`sudo apt install postgresql-client`**: Instala o pacote que contém o `psql`, o cliente oficial de linha de comando para interagir com o PostgreSQL.
 - **`psql --host [endereço] --username [usuario] --port [porta]`**: Comando para se conectar a uma instância de banco de dados Postgres (Ex: `psql --host localhost --username postgres --port 5432`).
 - **`\q`**: Comando executado dentro do terminal do `psql` para encerrar a conexão e sair (quit).
 - **`SELECT 1+1;`**: Exemplo de query SQL básica para testar se a conexão está ativa e processando comandos.
+- **`SELECT 1 + 1 AS sum;`**: Query SQL básica utilizada para testar se a comunicação entre o seu código e o banco de dados está funcionando corretamente.
+- **`npm install pg@8.11.3`**: Instala o driver de conexão oficial do PostgreSQL para Node.js em uma versão específica e estável.
+
+### 🔑 .env (Variáveis de Ambiente e Segurança)
+
+Conceitos e comandos para gerenciar configurações sensíveis e garantir que a aplicação seja **Stateless**. Esta camada permite que o sistema se comporte de forma diferente (Dev, Homologação, Produção) sem alterar uma única linha de código.
+
+- **`.env`**: Arquivo local (que deve ser protegido e não commitado em projetos reais com dados sensíveis) que armazena pares de `CHAVE=valor` para configurar o ecossistema da aplicação.
+- **`process.env`**: Objeto global do Node.js que mapeia e permite acessar as variáveis de ambiente injetadas no processo em execução (ex: `process.env.POSTGRES_PASSWORD`).
+- **`JSON.parse()`**: Função utilizada para transformar uma string JSON vinda de uma variável de ambiente (como configurações dinâmicas de _Rate Limit_) de volta em um objeto JavaScript funcional.
