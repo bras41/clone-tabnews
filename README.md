@@ -87,9 +87,10 @@ Estes comandos introduzem a plataforma de contêineres, uma tecnologia essencial
 - **`docker -v`**: Apenas verificamos se o Docker estava instalado e pronto para uso no ambiente.
 - **`docker ps -a`**: Lista todos os contêineres (o `-a` ou `--all` inclui os que estão parados). Útil para verificar **Exit Codes** de processos que encerraram.
 - **`docker logs [ID ou Nome]`**: Exibe o histórico de logs de um contêiner específico. Essencial para debugar falhas de inicialização.
-- **`docker compose up -d`** (ou **`docker compose up --detached`**): Sobe os serviços definidos no arquivo `compose.yaml` em modo **detached** (segundo plano), liberando o terminal.
+- **`docker compose up -d`** (ou **`docker compose up --detached`**): Sobe os serviços definidos no arquivo `compose.yaml` em modo **detached** (a flag `-d` ou `--detached` roda os containers em segundo plano), liberando o terminal.
 - **`docker compose up -d --force-recreate`**: Força a recriação dos contêineres mesmo que não haja alterações aparentes no arquivo de configuração. Útil para aplicar novas portas ou variáveis.
 - **`docker compose -f [caminho/do/arquivo] up`**: A flag `-f` (ou `--file`) permite especificar o caminho de um arquivo de configuração que não esteja na raiz (ex: `infra/compose.yaml`).
+  - _Exemplo:_ `docker compose -f infra/compose.yaml up -d` (inicia os serviços baseados no arquivo dentro da pasta `infra` e os mantém rodando em segundo plano)
 - **`docker compose down`**: Para e remove todos os contêineres, redes e imagens definidos no arquivo de configuração.
 - **`docker compose up`**: Sobe os serviços definidos no arquivo `compose.yaml` , porém mantém o terminal travado (para destravar, use o comando `Ctrl + C`).
 - **`env_file: .env`**: Chave utilizada dentro do arquivo `compose.yaml` para instruir o Docker a carregar variáveis de ambiente diretamente de um arquivo externo, evitando duplicidade de configurações.
