@@ -17,7 +17,7 @@ Este repositório contém a implementação do projeto [TabNews](https://www.tab
 - 🐳 **Conteinerização:** Docker
 - 🧪 **Testes Automatizados:** Jest
 - 🐘 **Banco de Dados:** PostgreSQL
-- 🔑 **Variáveis de Ambiente:** .env
+- ⚙️ **Configuração e Padrões:** `.env.development` (Variáveis de Ambiente - OBS: antes `.env`, que não era commitado), `jsconfig.json` (Absolute Imports).
 
 # ⭐ Lista de comandos
 
@@ -33,6 +33,9 @@ Estes são os comandos básicos para você se localizar e organizar o terminal d
 - **`env`**: Lista todas as variáveis de ambiente ativas no seu processo atual do Shell.
 - **`history`**: Exibe o histórico de comandos digitados no terminal. (Dica: Adicionar um **espaço em branco** antes de qualquer comando impede que ele seja registrado no histórico, protegendo dados sensíveis).
 - **`exit`** ou **`Ctrl + D`**: Encerra a sessão atual do terminal ou processo ativo.
+- **`Ctrl + P`** (Windows/Linux) ou **`Cmd + P`** (macOS): Atalho para o **Fuzzy Search** (busca difusa) do VS Code. Permite encontrar arquivos rapidamente digitando apenas partes do nome.
+- **`Ctrl + P` > `@nome_da_propriedade`**: Busca avançada que leva o cursor diretamente para um símbolo ou propriedade dentro de um arquivo (ex: `@scripts` no `package.json`).
+- **`code [arquivo]`**: Comando de linha de comando (CLI) do VS Code para criar um novo arquivo ou abrir um existente diretamente pelo terminal.
 
 ### 🟢 Node.js e NVM (Gerenciamento de Versão)
 
@@ -52,9 +55,13 @@ Comandos para gerenciar as dependências (bibliotecas) do projeto e executar scr
 - **`npm install [pacote]@[versão]`**: Baixa e instala uma dependência no projeto. Utilizar o `@[versão]` instala uma versão exata de um pacote, ignorando atualizações automáticas.
   - Exemplos usados: `npm install next@13.1.6` (**Next.js** = framewok para desenvolvimento web que permite criar sites rápidos com renderização no servidor), `npm install react@18.2.0` (**React** = biblioteca principal para construir interfaces de usuário baseadas em componentes), `npm install react-dom@18.2.0` (**React DOM** = permite ao React interagir com o navegador e renderizar os elementos no HTML).
 - **`npm run dev`**: Executa o script chamado "dev" que configuramos no `package.json` (que, por sua vez, roda o `next dev` para subir o servidor local).
-- **`npm install [pacote] --save-dev`** (ou \*_`npm install [pacote] -D`_\*): Instala uma dependência exclusivamente para o ambiente de desenvolvimento (ela vai para o bloco `devDependencies` do `package.json`). Utilizada para ferramentas que não vão para produção, como o Prettier (ex: `npm install prettier --save-dev`).
+- **`npm install [pacote] --save-dev`** (ou **`npm install [pacote] -D`**): Instala uma dependência exclusivamente para o ambiente de desenvolvimento (ela vai para o bloco `devDependencies` do `package.json`). Utilizada para ferramentas que não vão para produção, como o Prettier (ex: `npm install prettier --save-dev`).
 - **`npm run lint:check`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conferência (`prettier --check .`), analisando todos os arquivos e avisando se há erros de formatação sem alterar nada.
 - **`npm run lint:fix`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conserto (`prettier --write .`), corrigindo e reescrevendo automaticamente a formatação dos arquivos que estão fora do padrão.
+- **`npm run services:up`**: Atalho para subir a infraestrutura do Docker em segundo plano. Abstração adicionada ao `package.json` para facilitar a vida do desenvolvedor.
+- **`npm run services:stop`**: Atalho para pausar os serviços do Docker. Adicionado ao `package.json`.
+- **`npm run services:down`**: Atalho para derrubar e remover os contêineres e redes do Docker. (Nota: Por padrão, este comando mantém os volumes de dados; os dados só são deletados se a flag `-v` for incluída no script do `package.json`).
+- **`npm run dev`**: Agora automatizado para executar **`services:up && next dev`**. Um único comando que garante que o banco de dados esteja ativo antes de subir o servidor web.
 
 ### 🌳 Git (Controle de Versão Offline / Local)
 
@@ -71,6 +78,8 @@ Estes são os comandos para gerenciar a "máquina do tempo" do seu código por m
 - **`git commit --amend --no-edit`**: Variação do comando `amend` que altera o último commit mantendo a mensagem original, sem abrir o editor de texto. Útil para correções rápidas onde a descrição do commit não muda.
 - **`git add -A`**: Adiciona **todas** as alterações do seu repositório de uma só vez para o _stage_ (o palco), incluindo arquivos modificados, novos (_untracked_) e deletados.
 - **`q` (tecla)**: Comando utilizado para sair (quit) do modo de visualização paginada no terminal, muito comum ao executar comandos longos como `git log` ou `git diff`.
+- **`git mv [origem] [destino]`**: Move ou renomeia um arquivo, já colocando a alteração no "palco" (_stage_). Utilizado para renomear o `.env` para `.env.development`.
+- **`git commit -am "[mensagem]"`**: Atalho que realiza o `git add` e o `git commit` simultaneamente. Funciona apenas para arquivos **já rastreados** pelo Git que foram modificados; ele não adiciona arquivos novos (_untracked_).
 
 ### ☁️ Git (Controle de Versão Online / Remoto)
 
@@ -91,8 +100,11 @@ Estes comandos introduzem a plataforma de contêineres, uma tecnologia essencial
 - **`docker compose up -d --force-recreate`**: Força a recriação dos contêineres mesmo que não haja alterações aparentes no arquivo de configuração. Útil para aplicar novas portas ou variáveis.
 - **`docker compose -f [caminho/do/arquivo] up`**: A flag `-f` (ou `--file`) permite especificar o caminho de um arquivo de configuração que não esteja na raiz (ex: `infra/compose.yaml`).
   - _Exemplo:_ `docker compose -f infra/compose.yaml up -d` (inicia os serviços baseados no arquivo dentro da pasta `infra` e os mantém rodando em segundo plano)
+- **`docker compose -f [caminho/do/arquivo] down`**: Procura o arquivo de configuração no caminho do arquivo e derruba o contêiner.
+  - _Exemplo:_ `docker compose -f infra/compose.yaml down` (encerra os serviços baseados no arquivo dentro da pasta `infra`)
 - **`docker compose down`**: Para e remove todos os contêineres, redes e imagens definidos no arquivo de configuração.
 - **`docker compose up`**: Sobe os serviços definidos no arquivo `compose.yaml` , porém mantém o terminal travado (para destravar, use o comando `Ctrl + C`).
+- **`docker compose stop`**: Pausa a execução dos serviços sem remover os contêineres ou volumes. É o comando recomendado para o dia a dia, pois economiza recursos do sistema mantendo o estado atual do banco de dados intacto.
 - **`env_file: .env`**: Chave utilizada dentro do arquivo `compose.yaml` para instruir o Docker a carregar variáveis de ambiente diretamente de um arquivo externo, evitando duplicidade de configurações.
 
 ### 🌐 Redes e DNS (Domain Name System)
@@ -144,10 +156,12 @@ Comandos para instalar o cliente, realizar conexões manuais e interagir com o s
 - **`SELECT 1 + 1 AS sum;`**: Query SQL básica utilizada para testar se a comunicação entre o seu código e o banco de dados está funcionando corretamente.
 - **`npm install pg@8.11.3`**: Instala o driver de conexão oficial do PostgreSQL para Node.js em uma versão específica e estável.
 
-### 🔑 .env (Variáveis de Ambiente e Segurança)
+### ⚙️ Configuração e Padrões de Projeto
 
-Conceitos e comandos para gerenciar configurações sensíveis e garantir que a aplicação seja **Stateless**. Esta camada permite que o sistema se comporte de forma diferente (Dev, Homologação, Produção) sem alterar uma única linha de código.
+Esta seção detalha os arquivos e convenções que estipulam as regras do ambiente de desenvolvimento, garantindo que a aplicação seja **Stateless** e semanticamente organizada.
 
-- **`.env`**: Arquivo local (que deve ser protegido e não commitado em projetos reais com dados sensíveis) que armazena pares de `CHAVE=valor` para configurar o ecossistema da aplicação.
-- **`process.env`**: Objeto global do Node.js que mapeia e permite acessar as variáveis de ambiente injetadas no processo em execução (ex: `process.env.POSTGRES_PASSWORD`).
-- **`JSON.parse()`**: Função utilizada para transformar uma string JSON vinda de uma variável de ambiente (como configurações dinâmicas de _Rate Limit_) de volta em um objeto JavaScript funcional.
+- **`.env.development`**: Arquivo local que armazena pares de `CHAVE=valor` para configurar variáveis de ambiente. No Dia 19, renomeamos o `.env` original para ser mais semântico em relação ao ambiente de desenvolvimento.
+- **`process.env`**: Objeto global do Node.js que mapeia e permite acessar as variáveis injetadas no processo (ex: `process.env.POSTGRES_DB`).
+- **`jsconfig.json`**: Arquivo que define a raiz do projeto para o editor e o framework. Sua presença habilita o suporte ao IntelliSense e organiza a estrutura do projeto.
+- **`baseUrl: "."`**: Configuração dentro do `jsconfig.json` que habilita os **Absolute Imports**. Isso permite importar módulos a partir da raiz (ex: `import database from "infra/database"`) eliminando caminhos relativos complexos como `../../../../`.
+- **`JSON.parse()`**: Função utilizada para converter strings JSON vindas de variáveis de ambiente de volta em objetos JavaScript funcionais.
