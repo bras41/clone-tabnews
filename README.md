@@ -2,26 +2,28 @@
 
 Este repositório contém a implementação do projeto [TabNews](https://www.tabnews.com.br) para o curso [curso.dev](https://curso.dev). Abaixo, uma lista de referência dos comandos utilizados durante o desenvolvimento.
 
-# Tecnologias utilizadas
+# Tecnologias e metodologias utilizadas
 
 - 🐧 **Navegação e Sistema:** Linux/Bash
 - 🟢 **Ambiente de Execução:** Node.js
 - 🟢 **Gerenciamento de Versão:** NVM
-- 📦 **Gerenciador de Pacotes:** NPM
+- 📦 **Gerenciamento de Pacotes:** NPM
 - 🌳 **Controle de Versão Offline / Local:** Git
 - ☁️ **Controle de Versão Online / Remoto:** Git
 - ▲ **Framework Web:** Next.js
 - ⚛️ **Biblioteca de Interface de Usuário:** React
 - 💅 **Estilização e Formatação de Código:** Prettier, EditorConfig
-- ☁️ **Hospedagem e Continuous Deployment (CD):** Vercel
+- 🌐 **Hospedagem e Continuous Deployment (CD):** Vercel
 - 🐳 **Conteinerização:** Docker
 - 🧪 **Testes Automatizados:** Jest
 - 🐘 **Banco de Dados:** PostgreSQL
-- ⚙️ **Configuração e Padrões:** `.env.development` (Variáveis de Ambiente - OBS: antes `.env`, que não era commitado), `jsconfig.json` (Absolute Imports).
+- ⚙️ **Configuração e Padrões:** `.env.development` (Variáveis de Ambiente - OBS: antes `.env`, que não era commitado), `jsconfig.json` (Absolute Imports)
+- 🔄 **Metodologia de Desenvolvimento:** TDD (Test-Driven Development) - Ciclo Red, Green, Refactor
+- 🏛️ **Arquitetura de Software:** Padrão MVC (Model-View-Controller)
 
 # ⭐ Lista de comandos
 
-### 🐧 Navegação e Sistema (Linux/Bash)
+### 🐧 Linux/Bash (Navegação e Sistema)
 
 Estes são os comandos básicos para você se localizar e organizar o terminal do Codespaces.
 
@@ -36,8 +38,9 @@ Estes são os comandos básicos para você se localizar e organizar o terminal d
 - **`Ctrl + P`** (Windows/Linux) ou **`Cmd + P`** (macOS): Atalho para o **Fuzzy Search** (busca difusa) do VS Code. Permite encontrar arquivos rapidamente digitando apenas partes do nome.
 - **`Ctrl + P` > `@nome_da_propriedade`**: Busca avançada que leva o cursor diretamente para um símbolo ou propriedade dentro de um arquivo (ex: `@scripts` no `package.json`).
 - **`code [arquivo]`**: Comando de linha de comando (CLI) do VS Code para criar um novo arquivo ou abrir um existente diretamente pelo terminal.
+- **`Ctrl + C`**: Interrompe o processo ativo no terminal (utilizado para encerrar o servidor e forçar o fechamento de sockets de rede pendurados).
 
-### 🟢 Node.js e NVM (Gerenciamento de Versão)
+### 🟢 Node.js e NVM (Ambiente de Execução / Gerenciamento de Versão)
 
 Comandos essenciais para configurar a fundação do projeto e garantir que todos estejam na mesma versão da tecnologia.
 
@@ -47,14 +50,16 @@ Comandos essenciais para configurar a fundação do projeto e garantir que todos
 - **`nvm alias default lts/hydrogen`**: Define a versão "Hydrogen" como o padrão do sistema, para que ela seja carregada automaticamente sempre que você abrir um novo terminal.
 - **`nvm install`**: Quando rodado sem argumentos na raiz do projeto, ele lê o arquivo `.nvmrc` (que especifica a versão do Node.js que o projeto requer) e instala/seleciona a versão definida nele.
 
-### 📦 NPM (Gerenciador de Pacotes)
+### 📦 NPM (Gerenciamento de Pacotes)
 
 Comandos para gerenciar as dependências (bibliotecas) do projeto e executar scripts.
 
 - **`npm init`**: Comando do **npm** (Node Package Manager = gerenciador padrão do Node.js usado para instalar, compartilhar e controlar as dependências - i.e., bibliotecas e ferramentas - de um projeto JavaScript) que inicializa o projeto, criando o arquivo `package.json` (o manifesto).
 - **`npm install [pacote]@[versão]`**: Baixa e instala uma dependência no projeto. Utilizar o `@[versão]` instala uma versão exata de um pacote, ignorando atualizações automáticas.
-  - Exemplos usados: `npm install next@13.1.6` (**Next.js** = framewok para desenvolvimento web que permite criar sites rápidos com renderização no servidor), `npm install react@18.2.0` (**React** = biblioteca principal para construir interfaces de usuário baseadas em componentes), `npm install react-dom@18.2.0` (**React DOM** = permite ao React interagir com o navegador e renderizar os elementos no HTML).
-- **`npm run dev`**: Executa o script chamado "dev" que configuramos no `package.json` (que, por sua vez, roda o `next dev` para subir o servidor local).
+  - _Exemplos usados:_ `npm install next@13.1.6` (**Next.js** = framewok para desenvolvimento web que permite criar sites rápidos com renderização no servidor), `npm install react@18.2.0` (**React** = biblioteca principal para construir interfaces de usuário baseadas em componentes), `npm install react-dom@18.2.0` (**React DOM** = permite ao React interagir com o navegador e renderizar os elementos no HTML).
+- **`npm run dev`**: Executa o script chamado "dev" que configuramos no `package.json` (que, por sua vez, roda o `next dev` para subir o servidor local). No Dia 19, passou também a executar o script de abstração (`npm run services:up`) para subir a infraestrutura do Docker (`docker compose -f infra/compose.yaml up -d`).
+  - _Script original (Dia 04):_ `npm run next dev`
+  - _Novo script (Dia 19):_ `npm run services:up && next dev`
 - **`npm install [pacote] --save-dev`** (ou **`npm install [pacote] -D`**): Instala uma dependência exclusivamente para o ambiente de desenvolvimento (ela vai para o bloco `devDependencies` do `package.json`). Utilizada para ferramentas que não vão para produção, como o Prettier (ex: `npm install prettier --save-dev`).
 - **`npm run lint:check`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conferência (`prettier --check .`), analisando todos os arquivos e avisando se há erros de formatação sem alterar nada.
 - **`npm run lint:fix`**: Comando/script personalizado criado no `package.json` para rodar o Prettier no modo de conserto (`prettier --write .`), corrigindo e reescrevendo automaticamente a formatação dos arquivos que estão fora do padrão.
@@ -69,6 +74,7 @@ Estes são os comandos para gerenciar a "máquina do tempo" do seu código por m
 
 - **`git status`**: É a sua bússola. Mostra em qual estado estão seus arquivos (_Untracked_, _Modified_ ou _Staged_).
 - **`git add [arquivo]`**: Move um arquivo do estado _Modified_ (ou _Untracked_) para o _Staged_ (o palco), preparando-o para a próxima “foto” (_Commit_).
+  - No Dia 20, foi reforçada a importância do **commit atômico/semântico**, adicionando arquivos individualmente para separar as tarefas de "Robustez do banco de dados" da de "Finalização do endpoint".
 - **`git commit -m "mensagem"`**: Tira a foto definitiva (_Commit_) dos arquivos que estão no palco, gravando a versão no histórico com uma mensagem descritiva.
 - **`git commit --amend`**: A "viagem no tempo". Permite alterar o último commit, fundindo as alterações que estão no palco com a versão anterior (alterando o hash do commit).
 - **`git diff`**: Mostra linha a linha o que mudou no código (a diferença entre o estado atual e a última versão salva).
@@ -141,11 +147,12 @@ Funções e sintaxes fundamentais para instalar e rodar a sua malha de proteçã
 - **`npm test`** (ou **`npm run test`**): Executa a bateria de testes automatizados uma única vez. _(Nota: Requer a configuração `"test": "jest"` na seção de scripts do `package.json`)_.
 - **`npm run test:watch`**: Executa o Jest em modo de observação (_watch mode_). O terminal fica "vigiando" os arquivos do projeto; toda vez que você salva um arquivo, ele roda a bateria de testes automaticamente. _(Nota: Requer a configuração `"test:watch": "jest --watch"` no `package.json`)_.
   - Alterando-a para **`jest --watchAll`**, garantimos que todos os testes sejam reexecutados a cada salvamento, independentemente do status no Git.
+  - No Dia 20, foi ensinado o uso do método **`.only`** (ex: `test.only`) dentro do código de teste para isolar e executar apenas uma bateria específica enquanto o Jest está em modo _watch_.
 - **`Ctrl + C`** ou **`q`**: Atalhos utilizados no terminal para interromper o modo _watch_ do Jest e voltar à linha de comando normal.
 - **`await fetch("[URL]")`**: Realiza uma requisição HTTP assíncrona por dentro do código. Por retornar uma _Promise_, deve ser precedida por `await` para que o teste aguarde a resposta antes de prosseguir com as verificações.
 - **`async () => { ... }`**: Define uma _arrow function_ como assíncrona. É obrigatório declarar a função de teste como `async` para que seja possível utilizar a palavra-chave `await` dentro dela.
 
-### **🐘 PostgreSQL (Banco de Dados)**
+### 🐘 PostgreSQL (Banco de Dados)
 
 Comandos para instalar o cliente, realizar conexões manuais e interagir com o servidor de banco de dados, utilizando o cliente oficial `psql` e o driver `pg` **(Node-Postgres)** para a aplicação.
 
@@ -162,6 +169,10 @@ Esta seção detalha os arquivos e convenções que estipulam as regras do ambie
 
 - **`.env.development`**: Arquivo local que armazena pares de `CHAVE=valor` para configurar variáveis de ambiente. No Dia 19, renomeamos o `.env` original para ser mais semântico em relação ao ambiente de desenvolvimento.
 - **`process.env`**: Objeto global do Node.js que mapeia e permite acessar as variáveis injetadas no processo (ex: `process.env.POSTGRES_DB`).
-- **`jsconfig.json`**: Arquivo que define a raiz do projeto para o editor e o framework. Sua presença habilita o suporte ao IntelliSense e organiza a estrutura do projeto.
+- **`jsconfig.json`**: Arquivo que define a raiz do projeto para o editor e o framework. Além dos Absolute Imports, sua configuração correta auxilia o **IntelliSense** a mapear a estrutura MVC do projeto.
 - **`baseUrl: "."`**: Configuração dentro do `jsconfig.json` que habilita os **Absolute Imports**. Isso permite importar módulos a partir da raiz (ex: `import database from "infra/database"`) eliminando caminhos relativos complexos como `../../../../`.
 - **`JSON.parse()`**: Função utilizada para converter strings JSON vindas de variáveis de ambiente de volta em objetos JavaScript funcionais.
+- **`text` e `values` (Queries Parametrizadas)**: Padrão de segurança utilizado para evitar **SQL Injection**. Em vez de interpolar strings manualmente, utiliza-se o objeto `{ text, values }` onde os valores são passados separadamente como placeholders (`$1`, `$2`).
+- **`Try/Catch/Finally`** **(Estrutura/Padrão de Resiliência)**: Padrão de resiliência implementado no `database.js` para garantir o fechamento da conexão com o banco (`client.end()`) mesmo em caso de erro (o "caminho triste"), evitando o **vazamento de conexões** (_connection leaks_).
+- **`snake_case` vs. `lowerCamelCase`**: Convenção de nomenclatura onde o backend usa _lowerCamelCase_ internamente, mas a interface pública da API (JSON) expõe chaves em _snake_case_ (ex: `updated_at`).
+- **ISO 8601**: Padrão internacional para representação de data e hora (ex: `2023-12-01T10:00:00.000Z`) utilizado para garantir clareza no fuso horário (UTC/Zulu).
