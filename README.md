@@ -16,10 +16,11 @@ Este repositório contém a implementação do projeto [TabNews](https://www.tab
 - 🌐 **Hospedagem e Continuous Deployment (CD):** Vercel
 - 🐳 **Conteinerização:** Docker
 - 🧪 **Testes Automatizados:** Jest
-- 🐘 **Banco de Dados:** PostgreSQL
+- 🐘 **Banco de Dados:** PostgreSQL, Neon (provedor de DBaaS)
 - ⚙️ **Configuração e Padrões:** `.env.development` (Variáveis de Ambiente - OBS: antes `.env`, que não era commitado), `jsconfig.json` (Absolute Imports)
-- 🔄 **Metodologia de Desenvolvimento:** TDD (Test-Driven Development) - Ciclo Red, Green, Refactor
+- 🔄 **Metodologia de Desenvolvimento:** TDD (Test-Driven Development) - Ciclo Red/Green/Refactor, ClickOps (configuração de infraestrutura via interface gráfica)
 - 🏛️ **Arquitetura de Software:** Padrão MVC (Model-View-Controller)
+- 🔐 **Segurança e Criptografia:** SSL/TLS
 
 # ⭐ Lista de comandos
 
@@ -34,11 +35,14 @@ Estes são os comandos básicos para você se localizar e organizar o terminal d
 - **`sudo apt update && sudo apt install dnsutils -y`**: Atualiza os repositórios e instala o pacote que contém as ferramentas `dig` e `nslookup`. (Essencial em ambientes novos).
 - **`env`**: Lista todas as variáveis de ambiente ativas no seu processo atual do Shell.
 - **`history`**: Exibe o histórico de comandos digitados no terminal. (Dica: Adicionar um **espaço em branco** antes de qualquer comando impede que ele seja registrado no histórico, protegendo dados sensíveis).
-- **`exit`** ou **`Ctrl + D`**: Encerra a sessão atual do terminal ou processo ativo.
+- **`exit`** (ou **`Ctrl + D`**): Encerra a sessão atual do terminal ou processo ativo.
 - **`Ctrl + P`** (Windows/Linux) ou **`Cmd + P`** (macOS): Atalho para o **Fuzzy Search** (busca difusa) do VS Code. Permite encontrar arquivos rapidamente digitando apenas partes do nome.
 - **`Ctrl + P` > `@nome_da_propriedade`**: Busca avançada que leva o cursor diretamente para um símbolo ou propriedade dentro de um arquivo (ex: `@scripts` no `package.json`).
 - **`code [arquivo]`**: Comando de linha de comando (CLI) do VS Code para criar um novo arquivo ou abrir um existente diretamente pelo terminal.
 - **`Ctrl + C`**: Interrompe o processo ativo no terminal (utilizado para encerrar o servidor e forçar o fechamento de sockets de rede pendurados).
+- **`Ctrl + D`**: Em um arquivo editável (código) do VS Code, esse é um comando de produtividade com múltiplos cursores, selecionando ocorrências repetidas para substituir caracteres iguais ou na mesma posição por outros caracteres de interesse.
+- **`Múltiplos Cursores + \n`**: Técnica para converter arquivos de texto com quebras de linha em strings contínuas para variáveis de ambiente.
+- **`Ctrl + Shift + L`** (Win/Linux) ou **`Cmd + Shift + L`** (Mac): Atalho do Bitwarden para preenchimento automático de credenciais.
 
 ### 🟢 Node.js e NVM (Ambiente de Execução / Gerenciamento de Versão)
 
@@ -86,6 +90,8 @@ Estes são os comandos para gerenciar a "máquina do tempo" do seu código por m
 - **`q` (tecla)**: Comando utilizado para sair (quit) do modo de visualização paginada no terminal, muito comum ao executar comandos longos como `git log` ou `git diff`.
 - **`git mv [origem] [destino]`**: Move ou renomeia um arquivo, já colocando a alteração no "palco" (_stage_). Utilizado para renomear o `.env` para `.env.development`.
 - **`git commit -am "[mensagem]"`**: Atalho que realiza o `git add` e o `git commit` simultaneamente. Funciona apenas para arquivos **já rastreados** pelo Git que foram modificados; ele não adiciona arquivos novos (_untracked_).
+- **`git restore .`**: Descarta todas as modificações no diretório de trabalho atual. No Dia 21, foi essencial para limpar credenciais sensíveis usadas em testes locais antes de realizar o deploy.
+  - **`git restore [arquivo]`**: Descarta mudanças em determinado arquivo. No Dia 21, foi utilizado especificamente para **remover credenciais sensíveis** (como a senha da DigitalOcean) do arquivo `.env.development` antes de qualquer commit acidental.
 
 ### ☁️ Git (Controle de Versão Online / Remoto)
 
@@ -162,6 +168,9 @@ Comandos para instalar o cliente, realizar conexões manuais e interagir com o s
 - **`SELECT 1+1;`**: Exemplo de query SQL básica para testar se a conexão está ativa e processando comandos.
 - **`SELECT 1 + 1 AS sum;`**: Query SQL básica utilizada para testar se a comunicação entre o seu código e o banco de dados está funcionando corretamente.
 - **`npm install pg@8.11.3`**: Instala o driver de conexão oficial do PostgreSQL para Node.js em uma versão específica e estável.
+- **`SHOW server_version;`**: Query SQL para consultar a versão do banco (usada no Dia 20 para o TDD).
+- **`SHOW max_connections;`**: Query SQL para consultar o limite de conexões configurado no servidor.
+- **`SELECT count(*)::int FROM pg_stat_activity WHERE datname = 'local_db';`**: Query avançada usada no Dia 20 para contar conexões abertas filtrando por banco e convertendo o tipo (_type casting_).
 
 ### ⚙️ Configuração e Padrões de Projeto
 
@@ -176,3 +185,11 @@ Esta seção detalha os arquivos e convenções que estipulam as regras do ambie
 - **`Try/Catch/Finally`** **(Estrutura/Padrão de Resiliência)**: Padrão de resiliência implementado no `database.js` para garantir o fechamento da conexão com o banco (`client.end()`) mesmo em caso de erro (o "caminho triste"), evitando o **vazamento de conexões** (_connection leaks_).
 - **`snake_case` vs. `lowerCamelCase`**: Convenção de nomenclatura onde o backend usa _lowerCamelCase_ internamente, mas a interface pública da API (JSON) expõe chaves em _snake_case_ (ex: `updated_at`).
 - **ISO 8601**: Padrão internacional para representação de data e hora (ex: `2023-12-01T10:00:00.000Z`) utilizado para garantir clareza no fuso horário (UTC/Zulu).
+- **SSL (Secure Sockets Layer):** Propriedade configurada no client do banco de dados (`ssl: true`) para garantir que o tráfego de dados entre a aplicação e o provedor na nuvem seja encriptado.
+- **Certificado de CA (`POSTGRES_CA`):** Variável de ambiente utilizada para armazenar o conteúdo de certificados `.crt` (comumente em Base64). Essencial para validar conexões com provedores que utilizam certificados autoassinados (como a DigitalOcean).
+- **Estratégia de Subendereços de E-mail:** Uso de endereços dinâmicos (ex: `usuario+neon@email.com`) para isolar cadastros em serviços de infraestrutura e mitigar ataques de força bruta em caso de vazamentos.
+- **Operador Ternário para `NODE_ENV`:** Técnica utilizada no código para alternar configurações automaticamente entre ambientes.
+  - _Exemplo:_ `ssl: process.env.NODE_ENV === "development" ? false : true`.
+- **Manipulação de New Lines (`\n`):** Uso do caractere de escape `\n` dentro de variáveis de ambiente entre aspas duplas para permitir que strings multilinhas (como certificados de segurança) sejam lidas corretamente pelo processo da aplicação.
+- **Connection Slots e Superusers:** Entendimento de que o PostgreSQL reserva vagas de conexão exclusivas para administradores, permitindo manutenção mesmo quando o limite de conexões de usuários comuns é atingido.
+- **Connection Pooling:** Recurso (oferecido por provedores como Neon e DigitalOcean) para gerenciar centenas de conexões simultâneas de forma eficiente, alterando a porta padrão (ex: de `5432` para `6543`).
