@@ -16,8 +16,8 @@ Este repositório contém a implementação do projeto [TabNews](https://www.tab
 - 🌐 **Hospedagem e Continuous Deployment (CD):** Vercel
 - 🐳 **Conteinerização:** Docker
 - 🧪 **Testes Automatizados:** Jest
-- 🐘 **Banco de Dados:** PostgreSQL, Neon (provedor de DBaaS)
-- ⚙️ **Configuração e Padrões:** `.env.development` (Variáveis de Ambiente - OBS: antes `.env`, que não era commitado), `jsconfig.json` (Absolute Imports)
+- 🐘 **Banco de Dados:** PostgreSQL, Neon (provedor de DBaaS), `node-pg-migrate` (gerenciamento de BD - Migrations)
+- ⚙️ **Configuração e Padrões:** `.env.development` (Variáveis de Ambiente - OBS: antes `.env`, que não era commitado), `jsconfig.json` (Absolute Imports), dotenv (gerenciamento de variáveis de ambiente)
 - 🔄 **Metodologia de Desenvolvimento:** TDD (Test-Driven Development) - Ciclo Red/Green/Refactor, ClickOps (configuração de infraestrutura via interface gráfica)
 - 🏛️ **Arquitetura de Software:** Padrão MVC (Model-View-Controller)
 - 🔐 **Segurança e Criptografia:** SSL/TLS
@@ -71,6 +71,11 @@ Comandos para gerenciar as dependências (bibliotecas) do projeto e executar scr
 - **`npm run services:stop`**: Atalho para pausar os serviços do Docker. Adicionado ao `package.json`.
 - **`npm run services:down`**: Atalho para derrubar e remover os contêineres e redes do Docker. (Nota: Por padrão, este comando mantém os volumes de dados; os dados só são deletados se a flag `-v` for incluída no script do `package.json`).
 - **`npm run dev`**: Agora automatizado para executar **`services:up && next dev`**. Um único comando que garante que o banco de dados esteja ativo antes de subir o servidor web.
+- **`npm install node-pg-migrate@6.2.2`**: Instala o framework focado em PostgreSQL para gerenciamento de migrations.
+- **`npm install dotenv@16.4.4`**: Instala o módulo que permite carregar variáveis de ambiente de arquivos `.env` para o `process.env`.
+- **`npm run migration:create`**: Script personalizado para criar novos arquivos de migration dentro do diretório definido.
+- **`npm run migration:up`**: Script personalizado para executar as migrations pendentes no banco de dados.
+  - No Dia 22, este script foi configurado para usar a flag `--envPath` apontando para o arquivo de desenvolvimento: `"migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up"`.
 
 ### 🌳 Git (Controle de Versão Offline / Local)
 
@@ -171,6 +176,8 @@ Comandos para instalar o cliente, realizar conexões manuais e interagir com o s
 - **`SHOW server_version;`**: Query SQL para consultar a versão do banco (usada no Dia 20 para o TDD).
 - **`SHOW max_connections;`**: Query SQL para consultar o limite de conexões configurado no servidor.
 - **`SELECT count(*)::int FROM pg_stat_activity WHERE datname = 'local_db';`**: Query avançada usada no Dia 20 para contar conexões abertas filtrando por banco e convertendo o tipo (_type casting_).
+- **`up`** e **`down`**: Mecânica de execução de migrations. O `up` aplica as mudanças (criação/alteração) e o `down` reverte essas mudanças (exclusão/retorno ao estado anterior).
+- **`DATABASE_URL`**: Variável de ambiente padrão utilizada pelo `node-pg-migrate` para estabelecer a conexão com o banco de dados (formato: `postgres://user:password@host:port/database`).
 
 ### ⚙️ Configuração e Padrões de Projeto
 
